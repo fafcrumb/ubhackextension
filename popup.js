@@ -64,7 +64,9 @@ var socket = io.connect("ws://128.205.27.232:4004/");
         console.log(data);
         switch(rJson.action) {
           case "create_player":
-            player.uuid = rJson.uuid;
+            if(player.uuid == null) {
+              player.uuid = rJson.uuid;
+            }
             break;
           case "in_lobby":
             if(rJson.players != null) {
@@ -87,6 +89,7 @@ var socket = io.connect("ws://128.205.27.232:4004/");
       });
 
 function submitName() {
+  console.log("submitting name");
   player.name=$("#name_input").val();
   socket.emit("playerInfo", JSON.stringify({
     "action" : "create_player",
@@ -176,9 +179,13 @@ $(document).ready(function(){
   if(isLoaded()) {
     player = JSON.parse(localStorage.getItem(KEY_ME));
     nameStartUp.hide();
-    socket.emit("playerInfo",JSON.stringify({
-      "action" : "in_lobby",
+    socket.emit("playerInfo", JSON.stringify({
+      "action" : "create_player",
+      "name" : player.name,
       "uuid" : player.uuid
+    }));
+    socket.emit("playerInfo",JSON.stringify({
+      "action" : "in_lobby"
       }));
     $("#name_area").text(player.name);
   }
