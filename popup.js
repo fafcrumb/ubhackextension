@@ -42,11 +42,6 @@ function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
 }
 
-//
-document.addEventListener('DOMContentLoaded', function() {
-});
-
-// document.getElementById('submit').click(renderStatus("click"));
 var submitButton = $("#submit");
 var status = $("#status")
 var nameListArea = $("#name_list_area");
@@ -76,10 +71,10 @@ var socket = io.connect("ws://128.205.27.232:4004/");
           case "in_lobby":
             if(rJson.players != null) {
               nameListArea.show();
+              players = [];
               JSON.parse(rJson.players).forEach(function(item,index) {
                 var temp = $("<li class='list-group-item'>").html(item[Object.keys(item)[0]]);
                 nameList.append(temp);
-                players = [];
                 players.push(item);
               });
             }
