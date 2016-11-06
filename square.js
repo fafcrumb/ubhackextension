@@ -5,12 +5,13 @@ var viewportWidth = $(document).width();
 var viewportHeight = $(document).height();
 
 var myPlayer;
-var players = [];
+var otherPlayer;
 
 class Player {
   constructor(name, color) {
     this.name = name;
     this.color = color;
+    this.uuid = '';
 
     this.xPos = 0;
     this.yPos = 0;
@@ -92,6 +93,7 @@ function highlightLinks() {
 }
 
 (function init() {
+  var socket = io.connect("wss://128.205.27.232:4004/");
   canvas = document.createElement('canvas');
   canvas.id = "gameCanvas";
   ctx = canvas.getContext("2d");
@@ -100,7 +102,6 @@ function highlightLinks() {
   $("body").append(canvas);
 
   myPlayer = new Player('brian', 'blue');
-  players.push(myPlayer);
 
   highlightLinks();
 })();
@@ -118,39 +119,44 @@ function run() {
 var keys = [];
 
 function input() {
-  if (keys[37]) {
+  if (keys[37]) { //left
     if (myPlayer.xVel > -myPlayer.speed) {
       myPlayer.xVel--;
     }
   }
-  if (keys[39]) {
+  if (keys[39]) { //right
     if (myPlayer.xVel < myPlayer.speed) {
       myPlayer.xVel++;
     }
   }
-  if (keys[38]) {
+  if (keys[38]) { //up
     if (myPlayer.yVel > -myPlayer.speed) {
       myPlayer.yVel--;
     }
   }
-  if (keys[40]) {
+  if (keys[40]) { //down
     if (myPlayer.yVel < myPlayer.speed) {
       myPlayer.yVel++;
     }
   }
+
+/*  socket.emit("playerInfo", JSON.stringify({
+    "action" : "direction",
+    "up_press" : keys[38],
+    "down_press" : keys[40],
+    "left_press" : keys[37],
+    "right_press" : keys[39]
+  }));*/
 }
 
 function update() {
-  players.forEach(function(player) {
-    player.update();
-  });
+  myPlayer.update();
 }
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  players.forEach(function(player) {
-    player.render(ctx);
-  });
+
+  myPlayer.render(ctx);
 
   portals.forEach(function(portal) {
     portal.render(ctx);

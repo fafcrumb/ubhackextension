@@ -42,11 +42,6 @@ function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
 }
 
-//
-document.addEventListener('DOMContentLoaded', function() {
-});
-
-// document.getElementById('submit').click(renderStatus("click"));
 var status = $("#status")
 var nameListArea = $("#name_list_area");
 var waitingArea = $("#waiting_area");
@@ -57,7 +52,7 @@ nameListArea.hide();
 waitingArea.hide();
 playRequestArea.hide();
 
-var socket = io.connect("ws://128.205.27.232:4004/");
+var socket = io.connect("wss://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
           console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
       });
