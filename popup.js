@@ -48,13 +48,9 @@ var waitingArea = $("#waiting_area");
 var playRequestArea = $("#play_request_area");
 var nameStartUp = $("#name_start_up");
 var nameList = $("#nameList");
-nameListArea.hide();
-waitingArea.hide();
-playRequestArea.hide();
 
 var game_uuid = "",
     from_uuid = "";
-
 var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
           console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
@@ -185,3 +181,4 @@ $(document).ready(function(){
     $("#name_area").text(player.name);
   }
 });
+})
