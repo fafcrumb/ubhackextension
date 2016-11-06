@@ -154,8 +154,6 @@ function input() {
     myPlayer.img.src = chrome.extension.getURL("assets/blackspider-SW.png");
   }
 
-  console.log(keys[38]);
-
   chrome.runtime.sendMessage({"action" : "direction",
                               "up_press" : keys[38] || false, "down_press" : keys[40] || false,
                               "left_press" : keys[37] || false, "right_press" :  keys[39] || false});

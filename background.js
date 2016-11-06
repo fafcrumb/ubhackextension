@@ -84,8 +84,7 @@ var socket = io.connect("ws://128.205.27.232:4004/");
       });
 
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
-  console.log('sdfdsf' + chrome.extension.getViews()[0] + '');
-  socket.emit("playerInfo", JSON.stringify(response));
+  //socket.emit("playerInfo", JSON.stringify(response));
 });
 
 function submitName(){
