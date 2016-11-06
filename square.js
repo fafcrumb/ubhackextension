@@ -25,6 +25,8 @@ class Player {
 
     this.role = '';
     this.score = '';
+    this.img = new Image();
+    this.img.src = chrome.extension.getURL("assets/blackspider.png");
   }
 
   update() {
@@ -49,8 +51,10 @@ class Player {
   render(ctx) {
     ctx.fillStyle = this.color;
     ctx.beginPath();
-    ctx.arc(this.xPos, this.yPos, this.size, 0, Math.PI * 2);
+    ctx.arc(this.xPos, this.yPos, 5, 0, Math.PI * 2);
     ctx.fill();
+
+    ctx.drawImage(this.img, this.xPos, this.yPos);
   }
 }
 

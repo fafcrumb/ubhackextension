@@ -26,5 +26,6 @@
   "scripts": [
     "socket.io.js",
     "background.js"]
-  }
+  },
+  "web_accessible_resources": ["assets/*.png"]
 }
