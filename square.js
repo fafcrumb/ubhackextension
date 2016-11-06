@@ -53,25 +53,42 @@ class Player {
   }
 }
 
+class Portal {
+  constructor(xPos, yPos, width, height, url) {
+    this.width = width;
+    this.height = height;
+
+    this.xPos = xPos;
+    this.yPos = yPos;
+
+    this.url = url;
+  }
+
+  render(ctx) {
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.rect(this.xPos, this.yPos, this.width, this.height);
+    ctx.stroke();
+  }
+}
+
 var portals = [];
 
 function highlightLinks() {
   var listoflinks = document.getElementsByTagName("A");
 
   for(var i = 0; i < listoflinks.length ; i++){
+    linkBounds = listoflinks[i].getBoundingClientRect();
 
-  linkBounds = listoflinks[i].getBoundingClientRect();
+    var width = listoflinks[i].offsetWidth;
+    var height = listoflinks[i].offsetHeight;
+    var x = linkBounds.left;
+    var y = linkBounds.top + jQuery(document).scrollTop();
+    var url = listoflinks[i].href;
 
-    var div = jQuery('<div>').css({
-      "position":"absolute",
-      "height":listoflinks[i].offsetHeight,
-      "width":listoflinks[i].offsetWidth,
-      "margin-left":linkBounds.left,
-      "margin-top":linkBounds.top + jQuery(document).scrollTop(),
-      "border":"solid 1px",
-    })
-    jQuery('#gameCanvas').prepend(div)
+    portals.push(new Portal(x, y, width, height, url));
   }
+
 }
 
 (function init() {
@@ -80,13 +97,12 @@ function highlightLinks() {
   ctx = canvas.getContext("2d");
   canvas.width = viewportWidth;
   canvas.height = viewportHeight;
+  $("body").append(canvas);
 
   myPlayer = new Player('brian', 'blue');
   players.push(myPlayer);
 
   highlightLinks();
-
-  $("body").append(canvas);
 })();
 
 var gameOn = true;
@@ -134,6 +150,10 @@ function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   players.forEach(function(player) {
     player.render(ctx);
+  });
+
+  portals.forEach(function(portal) {
+    portal.render(ctx);
   });
 }
 

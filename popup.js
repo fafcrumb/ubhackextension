@@ -36,24 +36,7 @@ function getCurrentTabUrl(callback) {
 
     callback(url);
   });
-
-  // Most methods of the Chrome extension APIs are asynchronous. This means that
-  // you CANNOT do something like this:
-  //
-  // var url;
-  // chrome.tabs.query(queryInfo, function(tabs) {
-  //   url = tabs[0].url;
-  // });
-  // alert(url); // Shows "undefined", because chrome.tabs.query is async.
 }
-
-/**
- * @param {string} searchTerm - Search term for Google Image search.
- * @param {function(string,number,number)} callback - Called when an image has
- *   been found. The callback gets the URL, width and height of the image.
- * @param {function(string)} errorCallback - Called when the image is not found.
- *   The callback gets a string that describes the failure reason.
- */
 
 function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
@@ -61,7 +44,6 @@ function renderStatus(statusText) {
 
 //
 document.addEventListener('DOMContentLoaded', function() {
-  // renderStatus("hey whats up")
 });
 
 // document.getElementById('submit').click(renderStatus("click"));
@@ -108,7 +90,7 @@ var socket = io.connect("ws://128.205.27.232:4004/");
 submitButton.click(function() {
   player.name=$("#name_input").val();
   socket.emit("playerInfo", JSON.stringify({
-    "action" : "create_player", 
+    "action" : "create_player",
     "name" : player.name,
     "uuid" : player.uuid
   }));
