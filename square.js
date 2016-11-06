@@ -93,7 +93,6 @@ function highlightLinks() {
 }
 
 (function init() {
-  //var socket = io.connect("wss://128.205.27.232:4004/");
   canvas = document.createElement('canvas');
   canvas.id = "gameCanvas";
   ctx = canvas.getContext("2d");
@@ -140,13 +139,11 @@ function input() {
     }
   }
 
-/*  socket.emit("playerInfo", JSON.stringify({
-    "action" : "direction",
-    "up_press" : keys[38],
-    "down_press" : keys[40],
-    "left_press" : keys[37],
-    "right_press" : keys[39]
-  }));*/
+  console.log(keys[38]);
+
+  chrome.runtime.sendMessage({"action" : "direction",
+                              "up_press" : keys[38] || false, "down_press" : keys[40] || false,
+                              "left_press" : keys[37] || false, "right_press" :  keys[39] || false});
 }
 
 function update() {
