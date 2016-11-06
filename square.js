@@ -5,7 +5,7 @@ var viewportWidth = $(document).width();
 var viewportHeight = $(document).height();
 
 var myPlayer;
-var players = [];
+var otherPlayer;
 
 class Player {
   constructor(name, color) {
@@ -100,7 +100,6 @@ function highlightLinks() {
   $("body").append(canvas);
 
   myPlayer = new Player('brian', 'blue');
-  players.push(myPlayer);
 
   highlightLinks();
 })();
@@ -141,16 +140,13 @@ function input() {
 }
 
 function update() {
-  players.forEach(function(player) {
-    player.update();
-  });
+  myPlayer.update();
 }
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  players.forEach(function(player) {
-    player.render(ctx);
-  });
+
+  myPlayer.render();
 
   portals.forEach(function(portal) {
     portal.render(ctx);
