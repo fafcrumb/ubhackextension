@@ -52,7 +52,7 @@ nameListArea.hide();
 waitingArea.hide();
 playRequestArea.hide();
 
-var socket = io.connect("wss://128.205.27.232:4004/");
+var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
           console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
       });
@@ -97,7 +97,7 @@ function submitName(){
   nameStartUp.hide();
   socket.emit("playerInfo",JSON.stringify({
     "action" : "in_lobby"
-    }));
+  }));
 }
 
 function requestGame(listItemKey){
@@ -144,7 +144,3 @@ $(document).on("click", ".list-group-item", function(){
 $('#play_button').click(function(){
   acceptPlayRequest();
 })
-
-
-
-
