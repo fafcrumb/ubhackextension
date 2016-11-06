@@ -83,6 +83,8 @@ var socket = io.connect("ws://128.205.27.232:4004/");
         case "request_to_play_player":
             game_uuid = rJson.game_uuid;
             from_uuid = rJson.from_uuid;
+
+            console.log(game_uuid + " " + rJson.game_uuid);
             recieveGameRequest();
           break;
         case "response_to_play_player":
