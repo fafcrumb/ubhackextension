@@ -1,6 +1,5 @@
 var canvas;
 var ctx;
-var socket;
 
 var viewportWidth = $(document).width();
 var viewportHeight = $(document).height();
@@ -8,20 +7,10 @@ var viewportHeight = $(document).height();
 var myPlayer;
 var otherPlayer;
 
-var players = [];
-
-var submitButton = $("#submit");
-var status = $("#status")
-var nameListArea = $("#name_list_area");
-var nameStartUp = $("#name_start_up");
-var nameList = $("#nameList");
-nameListArea.hide();
-
 class Player {
   constructor(name, color) {
     this.name = name;
     this.color = color;
-
     this.uuid = '';
 
     this.xPos = 0;
@@ -104,7 +93,7 @@ function highlightLinks() {
 }
 
 (function init() {
-  socket = io.connect("ws://128.205.27.232:4004/");
+  var socket = io.connect("wss://128.205.27.232:4004/");
   canvas = document.createElement('canvas');
   canvas.id = "gameCanvas";
   ctx = canvas.getContext("2d");
@@ -151,13 +140,13 @@ function input() {
     }
   }
 
-  socket.emit("playerInfo", JSON.stringify({
+/*  socket.emit("playerInfo", JSON.stringify({
     "action" : "direction",
     "up_press" : keys[38],
     "down_press" : keys[40],
     "left_press" : keys[37],
     "right_press" : keys[39]
-  }));
+  }));*/
 }
 
 function update() {
@@ -183,52 +172,6 @@ document.body.addEventListener("keydown", function(e) {
 document.body.addEventListener("keyup", function(e) {
   e.preventDefault();
   keys[e.keyCode] = false;
-});
-
-socket.on('onconnected', function( data ) {
-    console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
-});
-
-function requestPlay() {
-
-  // players[0].uuid
-}
-
-socket.on('playerInfo', function(data) {
-  console.log( 'data recieved: ' + data );
-  var rJson = JSON.parse(data);
-  console.log(data);
-  switch(rJson.action) {
-    case "create_player":
-      myPlayer.uuid = rJson.uuid;
-      break;
-    case "in_lobby":
-      if(rJson.players != null) {
-        nameListArea.show();
-        players = [];
-        JSON.parse(rJson.players).forEach(function(item,index) {
-          var temp = $("<li class='list-group-item'>").html(item[Object.keys(item)[0]]);
-          nameList.append(temp);
-          players.push(item);
-        });
-      }
-      break;
-  }
-});
-
-submitButton.click(function() {
-  player.name=$("#name_input").val();
-  socket.emit("playerInfo", JSON.stringify({
-    "action" : "create_player",
-    "name" : player.name,
-    "uuid" : player.uuid
-  }));
-  $("#name_area").text(player.name);
-  console.log(player.name);
-  nameStartUp.hide();
-  socket.emit("playerInfo",JSON.stringify({
-    "action" : "in_lobby"
-    }));
 });
 
 jQuery(window).resize(function(){
