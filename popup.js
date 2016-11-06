@@ -48,9 +48,6 @@ var waitingArea = $("#waiting_area");
 var playRequestArea = $("#play_request_area");
 var nameStartUp = $("#name_start_up");
 var nameList = $("#nameList");
-nameListArea.hide();
-waitingArea.hide();
-playRequestArea.hide();
 
 var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {

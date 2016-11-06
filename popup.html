@@ -6,7 +6,7 @@
  -->
 <html>
   <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="popup.css">
     <script type="text/javascript" src="socket.io.js"></script>
@@ -37,15 +37,15 @@
         <input id="name_input" type="text" placeholder="Name">
         <button id="submit" class="btn btn-sm btn-primary">Submit</button>
       </div>
-      <div id="name_list_area">
+      <div id="name_list_area" style="display: none;">
         <span id=name_area_container>Welcome <strong id="name_area"></strong>!</span>
         <ul class="list-group" id="nameList"></ul>
           <!-- <li class="list-group-item">Here is a list item</li> -->
       </div>
-      <div id="waiting_area">
+      <div id="waiting_area" style="display: none;">
         <h3>Waiting for response...</h3>
       </div>
-      <div id="play_request_area">
+      <div id="play_request_area" style="display: none;">
         <button id="play_button" class="btn btn-large btn-success">Play</button>
         <button id="deny_button" class="btn btn-link">Deny</button>
       </div>
