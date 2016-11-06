@@ -49,8 +49,12 @@ var playRequestArea = $("#play_request_area");
 var nameStartUp = $("#name_start_up");
 var nameList = $("#nameList");
 
+<<<<<<< HEAD
 var game_uuid = "",
     from_uuid = "";
+
+=======
+>>>>>>> 608aa961a56a697c8c47c5d467a7eda8b5a793ed
 var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
           console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
@@ -98,6 +102,7 @@ function submitName() {
   nameStartUp.hide();
   socket.emit("playerInfo",JSON.stringify({
     "action" : "in_lobby"
+<<<<<<< HEAD
     }));
   localStorage.setItem(KEY_ME, JSON.stringify(player));
 }
@@ -108,6 +113,9 @@ function isLoaded() {
     return true;
   }
   return false;
+=======
+  }));
+>>>>>>> 608aa961a56a697c8c47c5d467a7eda8b5a793ed
 }
 
 function requestGame(listItemKey){
@@ -159,6 +167,7 @@ $(document).on("click", ".list-group-item", function(){
 
 $('#play_button').click(function(){
   acceptPlayRequest();
+<<<<<<< HEAD
 });
 
 $('#deny_button').click(function(){
@@ -181,3 +190,6 @@ $(document).ready(function(){
     $("#name_area").text(player.name);
   }
 });
+=======
+})
+>>>>>>> 608aa961a56a697c8c47c5d467a7eda8b5a793ed
