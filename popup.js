@@ -72,7 +72,7 @@ var nameStartUp = $("#name_start_up");
 var nameList = $("#nameList");
 nameListArea.hide();
 
-var socket = io.connect("ws://localhost:4004/");
+var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
           console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
       });

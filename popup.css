@@ -1,0 +1,23 @@
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  border: 5px solid #000;
+  background-color: red;
+}
+
+#master_container{
+	padding: 5px;
+	width:300px;
+	text-align: center;
+}
+
+#name_input{
+	height:28px;
+	font-size: 14px;
+}
+
+#btn{
+	margin-bottom: 5px;
+}
