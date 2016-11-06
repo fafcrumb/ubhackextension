@@ -8,6 +8,7 @@
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="popup.css">
     <script type="text/javascript" src="socket.io.js"></script>
     <script src="popup.js"></script>
     <title>Getting Started Extension's Popup</title>
@@ -30,21 +31,18 @@
     <script src="square.js"></script>
   </head>
   <body>
-    <div id="status"></div>
-    <div id="name_start_up">
-      <div>Enter your name below!</div>
-      <input id="name_input" type="text" placeholder="Enter name here">
-      <button id="submit" class="btn btn-sm">Submit</button>
+    <div id="master_container">
+      <div id="name_start_up">
+        <h4>Enter your name below!</h4>
+        <input id="name_input" type="text" placeholder="Name">
+        <button id="submit" class="btn btn-sm btn-primary">Submit</button>
+      </div>
+      <div id="name_list_area">
+        <p id="name_area"></p>
+        <ul class="list-group" id="nameList"></ul>
+          <!-- <li class="list-group-item">Here is a list item</li> -->
+      </div>
     </div>
-    <div id="name_list_area">
-      <p id="name_area">
-      </p>
-      <ul class="list-group" id="nameList">
-      </ul>
-        <!-- <li class="list-group-item">Here is a list item</li> -->
-      <img id="image-result" hidden>
-    </div>
-
     <script src="popup.js"></script>
   </body>
 </html>
