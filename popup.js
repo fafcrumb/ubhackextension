@@ -85,6 +85,17 @@ var socket = io.connect("ws://128.205.27.232:4004/");
             from_uuid = rJson.from_uuid;
             recieveGameRequest();
           break;
+        case "response_to_play_player":
+          if(rJson.status == "denied") {
+            hideAllAreas();
+            nameListArea.show();
+            game_uuid = "";
+            from_uuid = "";
+          }
+          break;
+        case "start game":
+          console.log("starting game [" + rJson + "]");
+          break;
         }
       });
 
@@ -133,7 +144,7 @@ function acceptPlayRequest(){
     "action" : "response_to_play_player",
     "game_uuid" : game_uuid,
     "status" : "accept"
-  }))
+  }));
 }
 
 function hideAllAreas(){
@@ -171,6 +182,8 @@ $('#deny_button').click(function(){
     "game_uuid" : game_uuid,
     "status" : "denied"
   }));
+  hideAllAreas();
+  nameListArea.show();
 });
 
 
