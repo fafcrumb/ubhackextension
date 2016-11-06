@@ -97,7 +97,8 @@ function submitName() {
   console.log(player.name);
   nameStartUp.hide();
   socket.emit("playerInfo",JSON.stringify({
-    "action" : "in_lobby"
+    "action" : "in_lobby",
+    "uuid" : player.uuid
     }));
   localStorage.setItem(KEY_ME, JSON.stringify(player));
 }
@@ -176,7 +177,8 @@ $(document).ready(function(){
     player = JSON.parse(localStorage.getItem(KEY_ME));
     nameStartUp.hide();
     socket.emit("playerInfo",JSON.stringify({
-      "action" : "in_lobby"
+      "action" : "in_lobby",
+      "uuid" : player.uuid
       }));
     $("#name_area").text(player.name);
   }
