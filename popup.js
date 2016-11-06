@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 var submitButton = $("#submit");
 var status = $("#status")
 var nameListArea = $("#name_list_area");
+var nameStartUp = $("#name_start_up");
 nameListArea.hide();
 
 var socket = io.connect("ws://localhost:4004/");
@@ -91,7 +92,8 @@ var socket = io.connect("ws://localhost:4004/");
             break;
           case "in_lobby":
             if(rJson.players != null) {
-              name_list_area.show();
+              nameListArea.show();
+
             } else {
 
             }
@@ -100,14 +102,14 @@ var socket = io.connect("ws://localhost:4004/");
       });
 
 submitButton.click(function() {
-  console.log("HIII");
   player.name=$("#name_input").text();
   socket.emit("playerInfo", JSON.stringify({
     "action" : "create_player",
     "name" : player.name,
     "uuid" : player.uuid
   }));
+  nameStartUp.hide();
   socket.emit(JSON.stringify({
     "action" : "in_lobby"
-  }));
-});
+    }));
+  });
