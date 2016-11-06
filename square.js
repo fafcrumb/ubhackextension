@@ -68,10 +68,7 @@ class Portal {
     ctx.fillStyle = 'black';
     ctx.beginPath();
     ctx.rect(this.xPos, this.yPos, this.width, this.height);
-    var frequency = 200;
-    if (! blinking || Math.floor(Date.now() / frequency) % 2) {
-      ctx.stroke()
-    }
+    ctx.stroke();
   }
 }
 
@@ -189,6 +186,6 @@ document.body.addEventListener("keyup", function(e) {
   keys[e.keyCode] = false;
 });
 
-jQuery(window).resize(function(){
+$(window).resize(function(){
     console.log("YOU LOSE STOP IT")
 });
