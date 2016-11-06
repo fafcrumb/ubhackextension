@@ -19,12 +19,14 @@ class Player {
     this.yVel = 0;
 
     this.speed = 2;
-    this.friction = 0.98;
+    this.friction = 0.8;
 
-    this.size = 35;
+    this.size = 40;
 
     this.role = '';
     this.score = '';
+    this.img = new Image();
+    this.img.src = chrome.extension.getURL("assets/blackspider.png");
   }
 
   update() {
@@ -47,10 +49,7 @@ class Player {
   }
 
   render(ctx) {
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.xPos, this.yPos, this.size, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.drawImage(this.img, this.xPos-this.size/2, this.yPos-this.size/2, this.size, this.size);
   }
 }
 
@@ -69,7 +68,10 @@ class Portal {
     ctx.fillStyle = 'black';
     ctx.beginPath();
     ctx.rect(this.xPos, this.yPos, this.width, this.height);
-    ctx.stroke();
+    var frequency = 200;
+    if (! blinking || Math.floor(Date.now() / frequency) % 2) {
+      ctx.stroke()
+    }
   }
 }
 
@@ -119,24 +121,40 @@ var keys = [];
 
 function input() {
   if (keys[37]) { //left
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-West.png");
     if (myPlayer.xVel > -myPlayer.speed) {
       myPlayer.xVel--;
     }
   }
   if (keys[39]) { //right
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-East.png");
     if (myPlayer.xVel < myPlayer.speed) {
       myPlayer.xVel++;
     }
   }
   if (keys[38]) { //up
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-North.png");
     if (myPlayer.yVel > -myPlayer.speed) {
       myPlayer.yVel--;
     }
   }
   if (keys[40]) { //down
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-South.png");
     if (myPlayer.yVel < myPlayer.speed) {
       myPlayer.yVel++;
     }
+  }
+  if(keys[37] && keys[38]){
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-NW.png");
+  }
+  if(keys[38] && keys[39]){
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-NE.png");
+  }
+  if(keys[39] && keys[40]){
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-SE.png");
+  }
+  if(keys[40] && keys[37]){
+    myPlayer.img.src = chrome.extension.getURL("assets/blackspider-SW.png");
   }
 
   console.log(keys[38]);
