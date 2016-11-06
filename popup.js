@@ -69,6 +69,7 @@ var submitButton = $("#submit");
 var status = $("#status")
 var nameListArea = $("#name_list_area");
 var nameStartUp = $("#name_start_up");
+var nameList = $("#nameList");
 nameListArea.hide();
 
 var socket = io.connect("ws://localhost:4004/");
@@ -93,23 +94,28 @@ var socket = io.connect("ws://localhost:4004/");
           case "in_lobby":
             if(rJson.players != null) {
               nameListArea.show();
-
-            } else {
-
+              JSON.parse(rJson.players).forEach(function(item,index) {
+                var temp = $("<li class='list-group-item'>").html(item[Object.keys(item)[0]]);
+                nameList.append(temp);
+                players = [];
+                players.push(item);
+              });
             }
             break;
         }
       });
 
 submitButton.click(function() {
-  player.name=$("#name_input").text();
+  player.name=$("#name_input").val();
   socket.emit("playerInfo", JSON.stringify({
-    "action" : "create_player",
+    "action" : "create_player", 
     "name" : player.name,
     "uuid" : player.uuid
   }));
+  $("#name_area").text(player.name);
+  console.log(player.name);
   nameStartUp.hide();
-  socket.emit(JSON.stringify({
+  socket.emit("playerInfo",JSON.stringify({
     "action" : "in_lobby"
     }));
   });
