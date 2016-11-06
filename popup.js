@@ -61,13 +61,61 @@ function renderStatus(statusText) {
 
 //
 document.addEventListener('DOMContentLoaded', function() {
-  renderStatus("hey whats up")
+  // renderStatus("hey whats up")
 });
 
-document.getElementById('submit').click(renderStatus("click"));
+// document.getElementById('submit').click(renderStatus("click"));
 var submitButton = $("#submit");
 var status = $("#status")
+var nameListArea = $("#name_list_area");
+var nameStartUp = $("#name_start_up");
+var nameList = $("#nameList");
+nameListArea.hide();
 
-submitButton.click(function{
-  var getval = $("#status").text("yoyoyoyo");
-});
+var socket = io.connect("ws://localhost:4004/");
+      socket.on('onconnected', function( data ) {
+          console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
+      });
+      var players;
+      function requestPlay() {
+
+        // players[0].uuid
+      }
+      var player = {};
+
+      socket.on('playerInfo', function(data) {
+        console.log( 'data recieved: ' + data );
+        var rJson = JSON.parse(data);
+        console.log(data);
+        switch(rJson.action) {
+          case "create_player":
+            player.uuid = rJson.uuid;
+            break;
+          case "in_lobby":
+            if(rJson.players != null) {
+              nameListArea.show();
+              JSON.parse(rJson.players).forEach(function(item,index) {
+                var temp = $("<li class='list-group-item'>").html(item[Object.keys(item)[0]]);
+                nameList.append(temp);
+                players = [];
+                players.push(item);
+              });
+            }
+            break;
+        }
+      });
+
+submitButton.click(function() {
+  player.name=$("#name_input").val();
+  socket.emit("playerInfo", JSON.stringify({
+    "action" : "create_player", 
+    "name" : player.name,
+    "uuid" : player.uuid
+  }));
+  $("#name_area").text(player.name);
+  console.log(player.name);
+  nameStartUp.hide();
+  socket.emit("playerInfo",JSON.stringify({
+    "action" : "in_lobby"
+    }));
+  });
