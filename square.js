@@ -154,12 +154,15 @@ function input() {
     myPlayer.img.src = chrome.extension.getURL("assets/blackspider-SW.png");
   }
 
-  chrome.runtime.sendMessage({"action" : "direction",
+  /*chrome.runtime.sendMessage({"action" : "direction",
                               "up_press" : keys[38] || false, "down_press" : keys[40] || false,
-                              "left_press" : keys[37] || false, "right_press" :  keys[39] || false});
+                              "left_press" : keys[37] || false, "right_press" :  keys[39] || false});*/
 }
 
 function update() {
+  chrome.runtime.sendMessage({"action" : "setViewport",
+                              "width" : viewportWidth,
+                              "height" : viewportHeight});
   myPlayer.update();
 }
 
@@ -174,6 +177,11 @@ function render() {
 }
 
 run();
+
+chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
+  //console.log('hhehee');
+  //alert(response);
+});
 
 document.body.addEventListener("keydown", function(e) {
   e.preventDefault();

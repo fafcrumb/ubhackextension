@@ -8,6 +8,18 @@
  * @param {function(string)} callback - called when the URL of the current tab
  *   is found.
  */
+ var set = false;
+ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
+   if (response.action === 'setViewport' && !set) {
+     set = true;
+     console.log('goind sd');
+     player.viewHeight = response.width;
+     player.viewWidth = response.height;
+   }
+   //socket.emit("playerInfo", JSON.stringify(response));
+   //alert(response);
+   //console.log(response);
+ });
 
 function getCurrentTabUrl(callback) {
   // Query filter to be passed to chrome.tabs.query - see
@@ -39,6 +51,8 @@ function getCurrentTabUrl(callback) {
   });
 }
 
+
+
 function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
 }
@@ -49,43 +63,70 @@ var waitingArea = $("#waiting_area");
 var playRequestArea = $("#play_request_area");
 var nameStartUp = $("#name_start_up");
 var nameList = $("#nameList");
+var inGame = $("#in_game_area");
+
+var game_uuid = "",
+    from_uuid = "";
 
 var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
           console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
       });
       var players;
-      function requestPlay() {
-
-        // players[0].uuid
-      }
       var player = {};
 
       socket.on('playerInfo', function(data) {
         console.log( 'data recieved: ' + data );
         var rJson = JSON.parse(data);
         console.log(data);
+        //rJson.action="start_game";
         switch(rJson.action) {
           case "create_player":
-            player.uuid = rJson.uuid;
+            if(player.uuid == null) {
+              player.uuid = rJson.uuid;
+            }
             break;
           case "in_lobby":
             if(rJson.players != null) {
               nameListArea.show();
+              players = [];
+              nameList.empty();
               JSON.parse(rJson.players).forEach(function(item,index) {
                 var temp = $("<li class='list-group-item' data-key=" + Object.keys(item)[0] + ">").html(item[Object.keys(item)[0]]);
                 nameList.append(temp);
-                players = [];
                 players.push(item);
               });
             }
           break;
+        case "request_to_play_player":
+            game_uuid = rJson.game_uuid;
+            from_uuid = rJson.from_uuid;
+
+            console.log(game_uuid + " " + rJson.game_uuid);
+            recieveGameRequest();
+          break;
+        case "response_to_play_player":
+          if(rJson.status == "denied") {
+            hideAllAreas();
+            nameListArea.show();
+            game_uuid = "";
+            from_uuid = "";
+          }
+          break;
+        case "start_game":
+          hideAllAreas();
+          inGame.show();
+          console.log("starting game [" + rJson + "]");
+          gameOn = true;
+          break;
         }
       });
 
-chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
-  //socket.emit("playerInfo", JSON.stringify(response));
-});
+/*while(true) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+    chrome.tabs.sendMessage(tabs[0].id, {action: "SendIt"}, function(response) {});
+  });
+}*/
 
 function submitName(){
   player.name=$("#name_input").val();
@@ -98,24 +139,42 @@ function submitName(){
   console.log(player.name);
   nameStartUp.hide();
   socket.emit("playerInfo",JSON.stringify({
-    "action" : "in_lobby"
-  }));
+    "action" : "in_lobby",
+    "uuid" : player.uuid
+    }));
+  localStorage.setItem(KEY_ME, JSON.stringify(player));
+}
+
+var KEY_ME = "ME_KEY_DO_DEE";
+function isLoaded() {
+  if(localStorage.getItem(KEY_ME) != null) {
+    return true;
+  }
+  return false;
 }
 
 function requestGame(listItemKey){
   hideAllAreas();
   waitingArea.show();
-  // Jesse do stuff here
+  socket.emit("playerInfo", JSON.stringify({
+    "action" : "request_to_play_player",
+    "to_uuid" : listItemKey,
+    "viewportWidth" : player.viewWidth,
+    "viewportHeight" : player.viewHeight
+  }));
 }
 
 function recieveGameRequest(){
   hideAllAreas();
   playRequestArea.show();
-  // Jesse do stuff here
 }
 
 function acceptPlayRequest(){
-  // Jeese do stuff here
+  socket.emit("playerInfo", JSON.stringify({
+    "action" : "response_to_play_player",
+    "game_uuid" : game_uuid,
+    "status" : "accept"
+  }));
 }
 
 function hideAllAreas(){
@@ -123,6 +182,7 @@ function hideAllAreas(){
   waitingArea.hide();
   nameStartUp.hide();
   playRequestArea.hide();
+  inGame.hide();
 }
 
 // === Listeners ===
@@ -145,4 +205,31 @@ $(document).on("click", ".list-group-item", function(){
 
 $('#play_button').click(function(){
   acceptPlayRequest();
+});
+
+$('#deny_button').click(function(){
+  socket.emit("playerInfo",JSON.stringify({
+    "action" : "response_to_play_player",
+    "game_uuid" : game_uuid,
+    "status" : "denied"
+  }));
+  hideAllAreas();
+  nameListArea.show();
+});
+
+$(document).ready(function(){
+  console.log("LOADED");
+  if(isLoaded()) {
+    player = JSON.parse(localStorage.getItem(KEY_ME));
+    nameStartUp.hide();
+    socket.emit("playerInfo", JSON.stringify({
+      "action" : "create_player",
+      "name" : player.name,
+      "uuid" : player.uuid
+    }));
+    socket.emit("playerInfo",JSON.stringify({
+      "action" : "in_lobby"
+      }));
+    $("#name_area").text(player.name);
+  }
 });
