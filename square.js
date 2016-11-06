@@ -93,7 +93,6 @@ function highlightLinks() {
 }
 
 (function init() {
-  var socket = io.connect("wss://128.205.27.232:4004/");
   canvas = document.createElement('canvas');
   canvas.id = "gameCanvas";
   ctx = canvas.getContext("2d");
