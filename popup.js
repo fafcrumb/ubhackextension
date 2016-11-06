@@ -52,15 +52,14 @@ nameListArea.hide();
 waitingArea.hide();
 playRequestArea.hide();
 
-var socket = io.connect("wss://128.205.27.232:4004/");
+var game_uuid = "",
+    from_uuid = "";
+
+var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
           console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
       });
       var players;
-      function requestPlay() {
-
-        // players[0].uuid
-      }
       var player = {};
 
       socket.on('playerInfo', function(data) {
@@ -74,18 +73,24 @@ var socket = io.connect("wss://128.205.27.232:4004/");
           case "in_lobby":
             if(rJson.players != null) {
               nameListArea.show();
+              players = [];
+              nameList.empty();
               JSON.parse(rJson.players).forEach(function(item,index) {
                 var temp = $("<li class='list-group-item' data-key=" + Object.keys(item)[0] + ">").html(item[Object.keys(item)[0]]);
                 nameList.append(temp);
-                players = [];
                 players.push(item);
               });
             }
           break;
+        case "request_to_play_player":
+            game_uuid = rJson.game_uuid;
+            from_uuid = rJson.from_uuid;
+            recieveGameRequest();
+          break;
         }
       });
 
-function submitName(){
+function submitName() {
   player.name=$("#name_input").val();
   socket.emit("playerInfo", JSON.stringify({
     "action" : "create_player",
@@ -98,22 +103,37 @@ function submitName(){
   socket.emit("playerInfo",JSON.stringify({
     "action" : "in_lobby"
     }));
+  localStorage.setItem(KEY_ME, JSON.stringify(player));
+}
+
+var KEY_ME = "ME_KEY_DO_DEE";
+function isLoaded() {
+  if(localStorage.getItem(KEY_ME) != null) {
+    return true;
+  }
+  return false;
 }
 
 function requestGame(listItemKey){
   hideAllAreas();
   waitingArea.show();
-  // Jesse do stuff here
+  socket.emit("playerInfo", JSON.stringify({
+    "action" : "request_to_play_player",
+    "to_uuid" : listItemKey
+  }));
 }
 
 function recieveGameRequest(){
   hideAllAreas();
   playRequestArea.show();
-  // Jesse do stuff here
 }
 
 function acceptPlayRequest(){
-  // Jeese do stuff here
+  socket.emit("playerInfo", JSON.stringify({
+    "action" : "response_to_play_player",
+    "game_uuid" : game_uuid,
+    "status" : "accept"
+  }))
 }
 
 function hideAllAreas(){
@@ -143,8 +163,25 @@ $(document).on("click", ".list-group-item", function(){
 
 $('#play_button').click(function(){
   acceptPlayRequest();
-})
+});
+
+$('#deny_button').click(function(){
+  socket.emit("playerInfo",JSON.stringify({
+    "action" : "response_to_play_player",
+    "game_uuid" : game_uuid,
+    "status" : "denied"
+  }));
+});
 
 
-
-
+$(document).ready(function(){
+  console.log("LOADED");
+  if(isLoaded()) {
+    player = JSON.parse(localStorage.getItem(KEY_ME));
+    nameStartUp.hide();
+    socket.emit("playerInfo",JSON.stringify({
+      "action" : "in_lobby"
+      }));
+    $("#name_area").text(player.name);
+  }
+});
