@@ -47,12 +47,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // document.getElementById('submit').click(renderStatus("click"));
-var submitButton = $("#submit");
 var status = $("#status")
 var nameListArea = $("#name_list_area");
+var waitingArea = $("#waiting_area");
+var playRequestArea = $("#play_request_area");
 var nameStartUp = $("#name_start_up");
 var nameList = $("#nameList");
 nameListArea.hide();
+waitingArea.hide();
+playRequestArea.hide();
 
 var socket = io.connect("ws://128.205.27.232:4004/");
       socket.on('onconnected', function( data ) {
@@ -77,17 +80,17 @@ var socket = io.connect("ws://128.205.27.232:4004/");
             if(rJson.players != null) {
               nameListArea.show();
               JSON.parse(rJson.players).forEach(function(item,index) {
-                var temp = $("<li class='list-group-item'>").html(item[Object.keys(item)[0]]);
+                var temp = $("<li class='list-group-item' data-key=" + Object.keys(item)[0] + ">").html(item[Object.keys(item)[0]]);
                 nameList.append(temp);
                 players = [];
                 players.push(item);
               });
             }
-            break;
+          break;
         }
       });
 
-submitButton.click(function() {
+function submitName(){
   player.name=$("#name_input").val();
   socket.emit("playerInfo", JSON.stringify({
     "action" : "create_player",
@@ -100,4 +103,53 @@ submitButton.click(function() {
   socket.emit("playerInfo",JSON.stringify({
     "action" : "in_lobby"
     }));
-  });
+}
+
+function requestGame(listItemKey){
+  hideAllAreas();
+  waitingArea.show();
+  // Jesse do stuff here
+}
+
+function recieveGameRequest(){
+  hideAllAreas();
+  playRequestArea.show();
+  // Jesse do stuff here
+}
+
+function acceptPlayRequest(){
+  // Jeese do stuff here
+}
+
+function hideAllAreas(){
+  nameListArea.hide();
+  waitingArea.hide();
+  nameStartUp.hide();
+  playRequestArea.hide();
+}
+
+// === Listeners ===
+
+$('#name_input').keydown(function(e){
+  if(e.keyCode == 13){
+    submitName();
+  }
+})
+
+$('#submit').click(function() {
+  submitName();
+});
+
+$(document).on("click", ".list-group-item", function(){
+  console.log("hi")
+  var listItemKey = $(this).data("key")
+  requestGame(listItemKey);
+});
+
+$('#play_button').click(function(){
+  acceptPlayRequest();
+})
+
+
+
+

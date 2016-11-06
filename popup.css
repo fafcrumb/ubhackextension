@@ -18,6 +18,18 @@ canvas {
 	font-size: 14px;
 }
 
-#btn{
-	margin-bottom: 5px;
+#name_list_area{
+	font-size: 14px;
+}
+
+#name_area_container{
+	padding:3px;
+}
+
+.list-group-item{
+	cursor: pointer;
+}
+
+.list-group-item:hover{
+	background-color:lightgrey;
 }

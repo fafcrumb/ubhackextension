@@ -38,9 +38,16 @@
         <button id="submit" class="btn btn-sm btn-primary">Submit</button>
       </div>
       <div id="name_list_area">
-        <p id="name_area"></p>
+        <span id=name_area_container>Welcome <strong id="name_area"></strong>!</span>
         <ul class="list-group" id="nameList"></ul>
           <!-- <li class="list-group-item">Here is a list item</li> -->
+      </div>
+      <div id="waiting_area">
+        <h3>Waiting for response...</h3>
+      </div>
+      <div id="play_request_area">
+        <button id="play_button" class="btn btn-large btn-success">Play</button>
+        <button id="deny_button" class="btn btn-link">Deny</button>
       </div>
     </div>
     <script src="popup.js"></script>
